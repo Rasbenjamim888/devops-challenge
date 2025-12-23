@@ -1,0 +1,44 @@
+name: DevOps Challenge - CI
+
+# Dispara o pipeline em qualquer Pull Request
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o código do repositório
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configura o Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-node-version: '20'
+          cache: 'npm'
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Linter (ESLint)
+      - name: Run Linter
+        run: npm run lint
+
+      # 5. Formatter (Prettier)
+      - name: Run Prettier
+        run: npm run prettier
+
+      # 6. Test (Jest)
+      - name: Run Tests
+        run: npm run test
+        env:
+          CI: true
+
+      # 7. Build
+      - name: Run Build
+        run: npm run build
